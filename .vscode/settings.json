@@ -93,7 +93,7 @@
   },
   "code-runner.runInTerminal": true,
   "code-runner.executorMap": {
-    "cpp": "cd $dir && g++ $fileName -I /usr/local/include/ -o $fileNameWithoutExt.o && $dir$fileNameWithoutExt"
+    "cpp": "cd $dir && g++ $fileName -I /usr/local/include/ -o $fileNameWithoutExt.o && $dir$fileNameWithoutExt.o"
   },
   "code-runner.ignoreSelection": true
 }
