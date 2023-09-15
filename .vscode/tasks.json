@@ -1,0 +1,50 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "g++ build active file",
+      "command": "/usr/local/bin/g++",
+      "args": [
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        //"-fsanitize=address,undefined",
+        "${file}",
+        "-o",
+        "${fileDirname}/${fileBasenameNoExtension}",
+        "-I",
+        "./ac-library/atcoder/"
+      ],
+      "options": {
+        "cwd": "${fileDirname}/"
+      },
+      "problemMatcher": ["$gcc"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "CheckTestCase",
+      "type": "shell",
+      "command": "cd ${fileDirname}  && g++ ${fileBasename} -I /usr/local/include/ -o ${fileBasenameNoExtension}.o && oj test -c \"${fileDirname}/${fileBasenameNoExtension}.o\" -d ${fileDirname}/tests/",
+      "presentation": {
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "SubmitCode",
+      "type": "shell",
+      "command": "cd ${fileDirname} && acc submit ${fileBasename} -- -l 4003",
+      "presentation": {
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      }
+    }
+  ]
+}
