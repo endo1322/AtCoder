@@ -2,25 +2,9 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Build with gcc",
       "type": "shell",
-      "label": "g++ build active file",
-      "command": "/usr/local/bin/g++",
-      "args": [
-        "-g",
-        "-Wall",
-        "-Wextra",
-        "-Wshadow",
-        //"-fsanitize=address,undefined",
-        "${file}",
-        "-o",
-        "${fileDirname}/${fileBasenameNoExtension}",
-        "-I",
-        "./ac-library/atcoder/"
-      ],
-      "options": {
-        "cwd": "${fileDirname}/"
-      },
-      "problemMatcher": ["$gcc"],
+      "command": "cd ${fileDirname}  && g++ -gdwarf-3 ${fileBasename} -I /usr/local/include/ -o ${fileBasenameNoExtension}.o --debug",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -39,7 +23,7 @@
     {
       "label": "SubmitCode",
       "type": "shell",
-      "command": "cd ${fileDirname} && acc submit ${fileBasename} -- -l 4003",
+      "command": "cd ${fileDirname} && acc submit ${fileBasename} -- -l 5001",
       "presentation": {
         "reveal": "always",
         "focus": true,
