@@ -1,0 +1,72 @@
+#include <bits/stdc++.h>
+using namespace std;
+#include <atcoder/all>
+using namespace atcoder;
+#define rep(i,n) for (int i = 0; (i) < (int)(n); ++ (i))
+#define rep3(i,m,n) for (int i = (m); (i) < (int)(n); ++ (i))
+#define rrep(i,n) for (int i = (int)(n) - 1; (i) >= 0; -- (i))
+#define rrep3(i,m,n) for (int i = (int)(n) - 1; (i) >= (int)(m); -- (i))
+#define all(...) std::begin(__VA_ARGS__), std::end(__VA_ARGS__)
+#define rall(...) std::rbegin(__VA_ARGS__), std::rend(__VA_ARGS__)
+#define int long long
+#define ll long long
+
+vector<pair<int, int>> D4 = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+vector<pair<int, int>> D8 = {{-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1}};
+
+vector<int> culc_p(int N) {
+    vector<bool> isP(N, true);
+    vector<int> P;
+    isP[0] = isP[1] = false;
+    rep3 (i, 2, N) {
+        if (!isP[i]) continue;
+        P.push_back(i);
+        for (int j = 1; i * j < N; j++) {
+            isP[i*j] = false;
+        }
+    }
+    return P;
+}
+
+int solve(int a, int b, int ct) {
+    int div = a / b;
+    int mod = a % b;
+    int mx = max(b, mod);
+    int mn = min(b, mod);
+    if (mx == 3 && mn == 2) {
+        return ct + div + 2;
+    } else if (mx == 2 && mn == 1) {
+        return ct + div + 1;
+    } else if (mn == 0) {
+        return ct + div - 1;
+    } else {
+        int ret = solve(mx, mn, ct + div);
+        return ret;
+    }
+}
+
+signed main() {
+    // input
+    int A, B; cin >> A >> B;
+
+    // solve
+    int mxg = gcd(A, B);
+    int mx = max(A / mxg, B / mxg);
+    int mn = min(A / mxg, B / mxg);
+    int fb = mx - mn;
+    int ans;
+    if (fb == 0) {
+        ans = 0;
+    } else if (fb == 1) {
+        if (mx == 3 && mn == 2) {
+            ans = 2;
+        } else {
+            ans = 1;
+        }
+    } else {
+        ans = solve(mx, mn, 0);
+    }
+
+    // output
+    cout << ans << endl;
+}
