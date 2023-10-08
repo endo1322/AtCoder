@@ -95,5 +95,17 @@
   "code-runner.executorMap": {
     "cpp": "cd $dir && g++ $fileName -I /usr/local/include/ -o $fileNameWithoutExt.o && $dir$fileNameWithoutExt.o"
   },
-  "code-runner.ignoreSelection": true
+  "code-runner.ignoreSelection": true,
+  "multiCommand.commands": [
+    {
+      "command": "GitAdd&Close",
+      "sequence": [
+        {
+          "command": "command-runner.run",
+          "args": { "command": "cd ${fileDirname}/ && git add ." }
+        },
+        "workbench.action.closeActiveEditor"
+      ]
+    }
+  ]
 }
