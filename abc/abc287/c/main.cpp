@@ -1,0 +1,111 @@
+#include <bits/stdc++.h>
+using namespace std;
+#include <atcoder/all>
+using namespace atcoder;
+#define rep(i,n) for (int i = 0; (i) < (int)(n); ++ (i))
+#define rep3(i,m,n) for (int i = (m); (i) < (int)(n); ++ (i))
+#define rrep(i,n) for (int i = (int)(n) - 1; (i) >= 0; -- (i))
+#define rrep3(i,m,n) for (int i = (int)(n) - 1; (i) >= (int)(m); -- (i))
+#define all(...) std::begin(__VA_ARGS__), std::end(__VA_ARGS__)
+#define rall(...) std::rbegin(__VA_ARGS__), std::rend(__VA_ARGS__)
+#define int long long
+#define ll long long
+
+vector<pair<int, int>> D4 = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+vector<pair<int, int>> D8 = {{-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1}};
+
+vector<int> culc_p(int N) {
+    vector<bool> isP(N, true);
+    vector<int> P;
+    isP[0] = isP[1] = false;
+    rep3 (i, 2, N) {
+        if (!isP[i]) continue;
+        P.push_back(i);
+        for (int j = 1; i * j < N; j++) {
+            isP[i*j] = false;
+        }
+    }
+    return P;
+}
+
+bool dfs(int st, int gl, set<int>& seen, vector<pair<bool, vector<int>>>& A) {
+    if (A[st].second.size() > 2) {
+        return false;
+    } else if (A[st].second.size() == 1 && A[st].second[0] == gl) {
+        seen.insert(st);
+        seen.insert(gl);
+        return true;
+    } else {
+        seen.insert(st);
+        rep (i, A[st].second.size()) {
+            if (seen.count(A[st].second[i]) != 0) continue;
+            if (A[st].second[i] == gl) {
+                seen.insert(gl);
+                return true;
+            }
+            return dfs(A[st].second[i], gl, seen, A);
+        }
+    }
+    return false;
+}
+
+signed main() {
+    // input
+    int N, M; cin >> N >> M;
+    vector<pair<bool, vector<int>>> A(N);
+    string ans = "Yes";
+    rep (i, M) {
+        int u, v;
+        cin >> u >> v;
+        u--;
+        v--;
+        A[u].second.push_back(v);
+        A[u].first = true;
+        A[v].second.push_back(u);
+        A[v].first = true;
+        if (A[u].second.size() > 2 || A[v].second.size() > 2) {
+            ans = "No";
+        }
+        if (A[u].second.size() == 2) {
+            A[u].first = false;
+        }
+        if (A[v].second.size() == 2) {
+            A[v].first = false;
+        }
+    }
+
+    // solve
+    bool flag = false;
+    bool flag2 = false;
+    int st = -1;
+    int gl = -1;
+    rep (i, N) {
+        if (!flag && !flag2 && A[i].first == true) {
+            st = i;
+            flag = true;
+        } else if (flag && !flag2 && A[i].first == true) {
+            gl = i;
+            flag2 = true;
+        } else if (flag && flag2 && A[i].first == true) {
+            ans = "No";
+        }
+    }
+    if (st == -1 || gl == -1) ans = "No";
+    set<int> seen;
+    flag = true;
+    if (ans != "No") {
+        if (dfs(st, gl, seen, A)) {
+            rep (i, N) {
+                if (seen.count(i) == 0) {
+                    ans = "No";
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) ans = "Yes";
+        } else {
+            ans = "No";
+        }
+    }
+    cout << ans << endl;
+}
