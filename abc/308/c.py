@@ -1,4 +1,22 @@
 import numpy as np
+from functools import cmp_to_key
+
+def ans_key(a, b):
+    x, y, i = a
+    xx, yy, ii = b
+    s = x * yy - xx * y
+    return 1 if s > 0 else -1 if s < 0 else 0
+
+def ans():
+    N = int(input())
+    AB =  []
+    for i in range(N):
+        a, b = map(int, input().split())
+        AB.append([a, a + b, i])
+    
+    AB.sort(key=cmp_to_key(ans_key), reverse=True)
+    print(*[i+1 for _, _, i in AB])
+
 
 def main():
     N = int(input())
@@ -19,7 +37,8 @@ def main():
     print(*ans+1)
 
 if __name__ == '__main__':
-    main()
+    # main()
+    ans()
 
 '''
 in

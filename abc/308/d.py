@@ -1,6 +1,41 @@
 from collections import deque
 import pprint
 
+H, W = map(int, input().split())
+S = [list(input()) for _ in range(H)]
+dy = [1, -1, 0, 0]
+dx = [0, 0, 1, -1]
+next = {'s':'n', 'n':'u', 'u':'k', 'k':'e', 'e':'s'}
+seen = [[False] * W for _ in range(H)]
+
+def ans_snuke(x, y):
+    seen[y][x] = True
+    if y == H-1 and x == W-1:
+        return
+    ns = next[S[y][x]]
+    for k in range(4):
+        nx = x + dx[k]
+        ny = y + dy[k]
+        if 0 <= nx <= W-1 and 0 <= ny <= H-1:
+            if S[ny][nx] not in next:
+                continue
+            if seen[ny][nx] == True:
+                continue
+            if S[ny][nx] == ns:
+                ans_snuke(nx, ny)
+
+def ans():
+    # H, W = map(int, input().split())
+    # S = [list(input()) for _ in range(H)]
+    if S[0][0] not in next:
+        print('No')
+    else:
+        ans_snuke(0, 0)
+        if seen[H-1][W-1] == True:
+            print('Yes')
+        else:
+            print('No')
+
 def snuke(H, W, S):
     open = deque([[0, 0]])
     o_s = S.copy()
@@ -50,7 +85,8 @@ def main():
     print(ans)
 
 if __name__ == '__main__':
-    main()
+    # main()
+    ans()
 
 '''
 in
