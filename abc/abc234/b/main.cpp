@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+#include <atcoder/all>
+using namespace atcoder;
+#define rep(i,n) for (int i = 0; (i) < (int)(n); ++ (i))
+#define rep3(i,m,n) for (int i = (m); (i) < (int)(n); ++ (i))
+#define rrep(i,n) for (int i = (int)(n) - 1; (i) >= 0; -- (i))
+#define rrep3(i,m,n) for (int i = (int)(n) - 1; (i) >= (int)(m); -- (i))
+#define all(...) std::begin(__VA_ARGS__), std::end(__VA_ARGS__)
+#define rall(...) std::rbegin(__VA_ARGS__), std::rend(__VA_ARGS__)
+#define int long long
+#define ll long long
+
+vector<pair<int, int>> D4 = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+vector<pair<int, int>> D8 = {{-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1}};
+
+vector<int> culc_p(int N) {
+    vector<bool> isP(N, true);
+    vector<int> P;
+    isP[0] = isP[1] = false;
+    rep3 (i, 2, N) {
+        if (!isP[i]) continue;
+        P.push_back(i);
+        for (int j = 1; i * j < N; j++) {
+            isP[i*j] = false;
+        }
+    }
+    return P;
+}
+
+signed main() {
+    ios_base::sync_with_stdio(false);
+    // input
+    int N; cin >> N;
+    vector<pair<int, int>> A(N);
+    rep (i, N) {
+        int x, y;
+        cin >> x >> y;
+        A[i] = {x, y};
+    }
+
+    // solve
+    long double ans = 0;
+    rep (i, N) {
+        rep (j, N) {
+            if (i == j) continue;
+            long double d = sqrt(powl(A[i].first - A[j].first, 2) + powl(A[i].second - A[j].second, 2));
+            ans = max(ans, d);
+        }
+    }
+
+    // output
+    cout << fixed << setprecision(10) << ans << endl;
+}
