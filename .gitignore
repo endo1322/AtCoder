@@ -5,3 +5,5 @@ contest.acc.json
 *.o
 
 *.plist
+
+/acl-documents
