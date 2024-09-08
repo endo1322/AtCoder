@@ -76,63 +76,57 @@ signed main() {
     }
 
     // solve
-    int ans = H * W;
-    set<pair<int, int>> hh;
-    set<pair<int, int>> ww;
+    int ans = 0;
+    vector<set<int>> hh(W);
+    vector<set<int>> ww(H);
     rep (i, H) rep (j, W) {
-        hh.insert({i, j});
-        ww.insert({j, i});
+        hh[j].insert(i);
+        ww[i].insert(j);
     }
     rep (i, Q) {
-        if (hh.count({RC[i]})) {
-            hh.erase({RC[i]});
-            ww.erase({RC[i].second, RC[i].first});
-            std::cout << "yes" << ' ' << RC[i].first << ' ' << RC[i].second << endl;
+        int r = RC[i].first;
+        int c = RC[i].second;
+        if (hh[c].count(r)) {
+            hh[c].erase(r);
+            ww[r].erase(c);
         } else {
-            auto next_h = hh.lower_bound({RC[i]});
-            auto prev_h = (next_h == hh.begin()) ? hh.end() : std::prev(next_h);
+            auto next_h = hh[c].lower_bound(r);
+            auto prev_h = (next_h == hh[c].begin()) ? hh[c].end() : std::prev(next_h);
 
-            auto next_w = ww.lower_bound({RC[i].second, RC[i].first});
-            auto prev_w = (next_w == ww.begin()) ? ww.end() : std::prev(next_w);
+            auto next_w = ww[r].lower_bound(c);
+            auto prev_w = (next_w == ww[r].begin()) ? ww[r].end() : std::prev(next_w);
 
-            // hh の要素を削除
-            if (next_h != hh.end()) {
+            // right
+            if (next_h != hh[c].end()) {
                 auto next_h_val = *next_h;
-                if (next_h_val.first == RC[i].first) {
-                    hh.erase(next_h);
-                    ww.erase(next_h_val);
-                    std::cout << RC[i].first << ' ' << RC[i].second << ' ' <<  next_h_val.first << ' ' << next_h_val.second  << endl;
-                }
-            }
-            if (prev_h != hh.end()) {
-                auto prev_h_val = *prev_h;
-                if (prev_h_val.first == RC[i].first) {
-                    hh.erase(prev_h);
-                    ww.erase(prev_h_val);
-                    std::cout << RC[i].first << ' ' << RC[i].second << ' ' <<  prev_h_val.first << ' ' << prev_h_val.second  << endl;
-                }
+                hh[c].erase(next_h);
+                ww[next_h_val].erase(c);
             }
 
-            // ww の要素を削除
-            if (next_w != ww.end()) {
-                auto next_w_val = *next_w;
-                if (next_w_val.first == RC[i].second) {
-                    ww.erase(next_w);
-                    hh.erase(next_w_val);
-                    std::cout << RC[i].first << ' ' << RC[i].second << ' ' <<  next_w_val.second << ' ' << next_w_val.first  << endl;
-                }
+            // left
+            if (prev_h != hh[c].end()) {
+                auto prev_h_val = *prev_h;
+                hh[c].erase(prev_h);
+                ww[prev_h_val].erase(c);
             }
-            if (prev_w != ww.end()) {
+
+            // down
+            if (next_w != ww[r].end()) {
+                auto next_w_val = *next_w;
+                ww[r].erase(next_w);
+                hh[next_w_val].erase(r);
+            }
+
+            // up
+            if (prev_w != ww[r].end()) {
                 auto prev_w_val = *prev_w;
-                if (prev_w_val.first == RC[i].second) {
-                    ww.erase(prev_w);
-                    hh.erase(prev_w_val);
-                    std::cout << RC[i].first << ' ' << RC[i].second << ' ' <<  prev_w_val.second << ' ' << prev_w_val.first  << endl;
-                }
+                ww[r].erase(prev_w);
+                hh[prev_w_val].erase(r);
             }
         }
     }
+    rep (i, W) ans += hh[i].size();
 
     // output
-    std::cout << hh.size() << endl;
+    std::cout << ans << endl;
 }
