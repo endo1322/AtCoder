@@ -3,7 +3,13 @@
 **/tests/**
 contest.acc.json
 *.o
+*.out
 
 *.plist
 
 /acl-documents
+
+*.txt
+*.yml
+
+AOJ/aoj-cli_0.5.2_macOS_amd64
