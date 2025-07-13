@@ -1,0 +1,81 @@
+#include <bits/stdc++.h>
+using namespace std;
+#include <atcoder/all>
+using namespace atcoder;
+#define rep(i, n) for (int i = 0; (i) < (int)(n); ++(i))
+#define rep3(i, m, n) for (int i = (m); (i) < (int)(n); ++(i))
+#define rrep(i, n) for (int i = (int)(n) - 1; (i) >= 0; --(i))
+#define rrep3(i, m, n) for (int i = (int)(n) - 1; (i) >= (int)(m); --(i))
+#define all(...) std::begin(__VA_ARGS__), std::end(__VA_ARGS__)
+#define rall(...) std::rbegin(__VA_ARGS__), std::rend(__VA_ARGS__)
+#define int long long
+#define ll long long
+#define double long double
+using mint = modint998244353;
+template <class T>
+using V = vector<T>;
+template <class T>
+using P = pair<T, T>;
+template <class T>
+using PQ = priority_queue<T>;
+template <class T>
+using PQG = priority_queue<T, V<T>, greater<T>>;
+const long long INF = LLONG_MAX;
+const long long MIN_INF = LLONG_MIN;
+
+vector<pair<int, int>> D4 = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+vector<pair<int, int>> D8 = {{-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1}};
+
+signed main()
+{
+    // input
+    int N;
+    cin >> N;
+    vector<int> A(N);
+    set<int> st;
+    rep(i, N)
+    {
+        int a;
+        cin >> a;
+        if (st.count(a))
+        {
+            A[i] = INF;
+        }
+        else
+        {
+            A[i] = a;
+            st.insert(a);
+        }
+    }
+
+    // solve
+    sort(all(A));
+    auto binary_search = [&]() -> int
+    {
+        int ng = 10e9 + 1;
+        int ok = 0;
+
+        auto isOK = [&](int l) -> bool
+        {
+            auto it = upper_bound(all(A), l);
+            int need = l - (it - A.begin());
+            int r_cnt = N - (it - A.begin());
+            return need * 2 <= r_cnt;
+        };
+
+        while (abs(ok - ng) > 1)
+        {
+            int mid = (ok + ng) / 2;
+
+            if (isOK(mid))
+                ok = mid;
+            else
+                ng = mid;
+        }
+        return ok;
+    };
+    int ans = binary_search();
+
+    // output
+    cout << ans << endl;
+}
