@@ -26,15 +26,11 @@ const long long MIN_INF = LLONG_MIN;
 vector<pair<int, int>> D4 = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
 vector<pair<int, int>> D8 = {{-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1}};
 
-bool check(string s)
+bool is_palindrome(string s)
 {
-    int len = s.size();
-    rep(i, len / 2)
-    {
-        if (s[i] != s[len - 1 - i])
-            return false;
-    }
-    return true;
+    string r_s = s;
+    reverse(r_s.begin(), r_s.end());
+    return s == r_s;
 }
 
 string to_base_str(int n, int base)
@@ -59,35 +55,31 @@ signed main()
 
     // solve
     int ans = 0;
+    auto check = [&](int x) -> bool
+    {
+        return x <= N && is_palindrome(to_base_str(x, A));
+    };
+
     bool skip_1 = false;
     bool skip_2 = false;
-    rep3(i, 1, 100000000)
+    rep3(i, 1, 10e6)
     {
         string s = to_string(i);
-        string reversed_s_1 = s.substr(0, s.size() - 1);
-        reversed_s_1 = string(reversed_s_1.rbegin(), reversed_s_1.rend());
-        string tmp1_str = s + reversed_s_1;
-        int tmp1 = stoll(tmp1_str);
-        if (tmp1 > N)
+        string r_s = s;
+        reverse(r_s.begin(), r_s.end());
+        s += r_s;
+        int s_ll = stoll(s);
+        if (s_ll > N)
             skip_1 = true;
-        if (!skip_1)
-        {
-            string tmp1_base_A = to_base_str(tmp1, A);
-            if (check(tmp1_base_A))
-                ans += tmp1;
-        }
+        if (!skip_1 && check(s_ll))
+            ans += s_ll;
 
-        string reversed_s_2 = string(s.rbegin(), s.rend());
-        string tmp2_str = s + reversed_s_2;
-        int tmp2 = stoll(tmp2_str);
-        if (tmp2 > N)
+        s.erase(s.begin() + (s.size() / 2));
+        s_ll = stoll(s);
+        if (s_ll > N)
             skip_2 = true;
-        if (!skip_2)
-        {
-            string tmp2_base_A = to_base_str(tmp2, A);
-            if (check(tmp2_base_A))
-                ans += tmp2;
-        }
+        if (!skip_2 && check(s_ll))
+            ans += s_ll;
 
         if (skip_1 && skip_2)
             break;
