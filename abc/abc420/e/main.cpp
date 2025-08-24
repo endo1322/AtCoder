@@ -1,0 +1,93 @@
+#include <bits/stdc++.h>
+using namespace std;
+#include <atcoder/all>
+using namespace atcoder;
+#define rep(i, n) for (int i = 0; (i) < (int)(n); ++(i))
+#define rep3(i, m, n) for (int i = (m); (i) < (int)(n); ++(i))
+#define rrep(i, n) for (int i = (int)(n) - 1; (i) >= 0; --(i))
+#define rrep3(i, m, n) for (int i = (int)(n) - 1; (i) >= (int)(m); --(i))
+#define all(...) std::begin(__VA_ARGS__), std::end(__VA_ARGS__)
+#define rall(...) std::rbegin(__VA_ARGS__), std::rend(__VA_ARGS__)
+#define int long long
+#define ll long long
+#define double long double
+using mint = modint998244353;
+template <class T>
+using V = vector<T>;
+template <class T>
+using P = pair<T, T>;
+template <class T>
+using PQ = priority_queue<T>;
+template <class T>
+using PQG = priority_queue<T, V<T>, greater<T>>;
+const long long INF = LLONG_MAX;
+const long long MIN_INF = LLONG_MIN;
+
+vector<pair<int, int>> D4 = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+vector<pair<int, int>> D8 = {{-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1}};
+
+signed main()
+{
+    // input
+    int N, Q;
+    cin >> N >> Q;
+    dsu uf(N);
+    V<set<int>> blacks(N);
+    V<string> Ans;
+    rep(i, Q)
+    {
+        int q;
+        cin >> q;
+        if (q == 1)
+        {
+            int u, v;
+            cin >> u >> v;
+            u--;
+            v--;
+            int prev_leader_u = uf.leader(u);
+            int prev_leader_v = uf.leader(v);
+            if (prev_leader_u == prev_leader_v)
+                continue;
+            uf.merge(u, v);
+            int new_leader = uf.leader(u);
+            if (new_leader == prev_leader_u)
+            {
+                for (auto &x : blacks[prev_leader_v])
+                    blacks[new_leader].insert(x);
+                blacks[prev_leader_v].clear();
+            }
+            else
+            {
+                for (auto &x : blacks[prev_leader_u])
+                    blacks[new_leader].insert(x);
+                blacks[prev_leader_u].clear();
+            }
+        }
+        else if (q == 2)
+        {
+            int v;
+            cin >> v;
+            v--;
+            int leader = uf.leader(v);
+            if (blacks[leader].count(v))
+                blacks[leader].erase(v);
+            else
+                blacks[leader].insert(v);
+        }
+        else
+        {
+            int v;
+            cin >> v;
+            v--;
+            int leader = uf.leader(v);
+            if (blacks[leader].size() > 0)
+                Ans.push_back("Yes");
+            else
+                Ans.push_back("No");
+        }
+    }
+
+    // output
+    for (const auto &ans : Ans)
+        cout << ans << endl;
+}
